@@ -28,7 +28,7 @@ var selected_color_index: int
 func _ready():
 	refresh_palettes()
 	refresh_list_button.connect("pressed", self, "refresh_palettes")
-	apply_color_changed_button.connect("pressed", self, "_apply_new_color_to_palette")
+	apply_color_changed_button.connect("pressed", self, "_apply_new_color_to_selected_palette")
 	new_palette_button.connect("pressed", self, "_create_new_palette")
 	color_picker.connect("color_changed", new_color_rect, "set_frame_color")
 	new_color_button.connect("pressed", self, "_add_color_to_selected_palette")
@@ -53,6 +53,8 @@ func refresh_palettes():
 		var pc = palette_container.instance()
 		pc.palette = p
 		pc.undoredo = undoredo
+		if selected_palette:
+			pc.selected = true if pc.palette.name == selected_palette.name else false
 		pc.connect("palette_updated", self, "refresh_palettes")
 		pc.connect("palette_color_selected", self, "_on_palette_color_selected")
 		pc.connect("container_selected", self, "_on_palette_container_selected")
@@ -69,13 +71,12 @@ func _on_palette_color_selected(palette: Palette, index: int):
 	selected_color_index = index
 
 
-func _apply_new_color_to_palette() -> void:
+func _apply_new_color_to_selected_palette() -> void:
 #	Check that we can actually apply before doing so
 	var size = selected_palette.colors.size()
 	if size == 0 or selected_color_index >= size:
 		return
 		
-	
 	var new_color = color_picker.color
 	var original_color = selected_palette.colors[selected_color_index]
 	
@@ -94,7 +95,7 @@ func _create_new_palette() -> void:
 	var palette = Palette.new()
 	palette.path = palette_dir_le.text + new_palette_name_le.text + ".gpl"
 	palette.save()
-	refresh_palettes()	
+	refresh_palettes()
 
 
 func _on_palette_container_selected(container: Control) -> void:

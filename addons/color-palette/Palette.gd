@@ -29,7 +29,7 @@ func reorder_color(p_index_from: int, p_index_to: int):
 	
 	if p_index_from > p_index_to:
 		colors.remove(p_index_from)
-		colors.insert(p_index_to + 1, moving_color)
+		colors.insert(p_index_to, moving_color)
 
 
 func remove_color(p_index: int):
@@ -47,7 +47,7 @@ func save():
 
 	var comment_lines = comments.split("\n")
 	for cl in comment_lines:
-		file.store_line(cl)
+		file.store_line("# " + cl)
 	
 	for c in colors:
 		var color_data = [

@@ -1,3 +1,8 @@
+# NOT USED
+# Currently not used in order to simplify the addon
+# May be used at a later date
+
+
 #tool
 #class_name PaletteColor
 #extends Reference

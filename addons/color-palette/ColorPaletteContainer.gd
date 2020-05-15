@@ -13,7 +13,7 @@ onready var grid = $MarginContainer/VBoxContainer/PaletteTileContainer/TileConta
 
 var palette: Palette
 var undoredo: UndoRedo
-var selected: bool setget set_selected
+var selected: bool = false setget set_selected 
 
 
 func _ready():
@@ -73,11 +73,13 @@ func _grid_item_reordered(p_index_from: int, p_index_to: int) -> void:
 	undoredo.add_do_method(palette, "reorder_color", p_index_from, p_index_to)
 	undoredo.add_do_method(palette, "save")
 	undoredo.add_do_method(self, "emit_signal", "palette_updated")
+	undoredo.add_do_method(self, "emit_signal", "palette_color_selected", palette, p_index_to)
 	
 #	To undo, just reverse the positions!
 	undoredo.add_undo_method(palette, "reorder_color", p_index_to, p_index_from)
 	undoredo.add_undo_method(palette, "save")
 	undoredo.add_undo_method(self, "emit_signal", "palette_updated")
+	undoredo.add_undo_method(self, "emit_signal", "palette_color_selected", palette, p_index_from)
 	
 	undoredo.commit_action()
 

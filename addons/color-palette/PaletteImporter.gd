@@ -18,6 +18,7 @@ static func import_gpl(path : String) -> Palette:
 			# Check if valid Gimp Palette Library file
 			if line_number == 0:
 				if line != "GIMP Palette":
+					push_error("File \"%s\" is not a valid GIMP Palette." % path)
 					break
 				else:
 					result = Palette.new()
@@ -28,10 +29,9 @@ static func import_gpl(path : String) -> Palette:
 						result.name = path.substr(name_start, name_end - name_start)
 
 			# Comments
-			if line.begins_with('#'):
+			elif line.begins_with('#'):
 				comments += line.trim_prefix('#') + '\n'
-				pass
-			elif line_number > 0 && line.length() >= 12:
+			elif line_number > 0 && line.length() >= 12 and line.substr(0, 1).is_valid_integer():
 				line = line.replace("\t", " ")
 				var color_data : PoolStringArray = line.split(" ", false, 4)
 				var red : float = color_data[0].to_float() / 255.0
