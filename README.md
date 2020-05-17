@@ -7,7 +7,9 @@ Manage color palettes from within Godot to make coloring and theming easier!
 
 # Quick Reference Docs
 
-To install the plugin, put the download the repository and put addons/godot-color-palette into your project directory (res://). Go to Project -> Settings -> Plugins, and activate the plugin. A new "Color Palette" tab should appear at the bottom, near "Output", "Debugger", etc.
+To install the plugin, put the download the repository and put addons/godot-color-palette into your project directory (res://). Or download directly from the asset library within the Godot editor.
+
+Go to Project -> Settings -> Plugins, and activate the plugin. A new "Color Palette" tab should appear at the bottom, near "Output", "Debugger", etc. 
 
 In this tab you can view and manage your colors and palettes.
 
