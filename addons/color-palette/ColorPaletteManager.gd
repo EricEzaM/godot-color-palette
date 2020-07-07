@@ -92,7 +92,7 @@ func _apply_new_color_to_selected_palette() -> void:
 
 
 func _create_new_palette() -> void:
-	if new_palette_name_le.text.length() > 0:
+	if new_palette_name_le.text.strip_edges().length() > 0:
 		var palette = Palette.new()
 		palette.path = palette_dir_le.text + new_palette_name_le.text + ".gpl"
 		palette.save()
