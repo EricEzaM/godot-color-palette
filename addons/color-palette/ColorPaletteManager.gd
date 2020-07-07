@@ -92,10 +92,13 @@ func _apply_new_color_to_selected_palette() -> void:
 
 
 func _create_new_palette() -> void:
-	var palette = Palette.new()
-	palette.path = palette_dir_le.text + new_palette_name_le.text + ".gpl"
-	palette.save()
-	refresh_palettes()
+	if new_palette_name_le.text.length() > 0:
+		var palette = Palette.new()
+		palette.path = palette_dir_le.text + new_palette_name_le.text + ".gpl"
+		palette.save()
+		refresh_palettes()
+	else:
+		push_error("Name cannot be blank")
 
 
 func _on_palette_container_selected(container: Control) -> void:
