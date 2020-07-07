@@ -15,6 +15,7 @@ static func import_gpl(path : String) -> Palette:
 		var line_number := 0
 		var comments := ""
 		for line in lines:
+			line = line.lstrip(" ")
 			# Check if valid Gimp Palette Library file
 			if line_number == 0:
 				if line != "GIMP Palette":
@@ -27,18 +28,18 @@ static func import_gpl(path : String) -> Palette:
 					var name_end = path.find_last('.')
 					if name_end > name_start:
 						result.name = path.substr(name_start, name_end - name_start)
-
 			# Comments
 			elif line.begins_with('#'):
 				comments += line.trim_prefix('#') + '\n'
-			elif line_number > 0 && line.length() >= 12 and line.substr(0, 1).is_valid_integer():
-				line = line.replace("\t", " ")
-				var color_data : PoolStringArray = line.split(" ", false, 4)
+			elif line.substr(0, 1).is_valid_integer():
+				var color_data : PoolStringArray = line.split("\t")[0].split(" ", false, 4)
 				var red : float = color_data[0].to_float() / 255.0
 				var green : float = color_data[1].to_float() / 255.0
 				var blue : float = color_data[2].to_float() / 255.0
 				var color = Color(red, green, blue)
 				result.add_color(color)
+			else:
+				push_error("Unable to parse line: %s" % line)
 			line_number += 1
 
 		if result:
