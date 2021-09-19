@@ -2,11 +2,13 @@ tool
 class_name PaletteImporter
 extends Reference
 
-
 # Adapted from Github -> Orama-Interactive/Pixelorama/src/Autoload/Import.gd
 static func import_gpl(path : String) -> Palette:
+	var color_line_regex = RegEx.new()
+	color_line_regex.compile("(?<red>[0-9]{1,3})[ \t]+(?<green>[0-9]{1,3})[ \t]+(?<blue>[0-9]{1,3})")
+
 	var result : Palette = null
-	
+
 	var file = File.new()
 	if file.file_exists(path):
 		file.open(path, File.READ)
@@ -31,15 +33,17 @@ static func import_gpl(path : String) -> Palette:
 			# Comments
 			elif line.begins_with('#'):
 				comments += line.trim_prefix('#') + '\n'
-			elif line.substr(0, 1).is_valid_integer():
-				var color_data : PoolStringArray = line.split("\t")[0].split(" ", false, 4)
-				var red : float = color_data[0].to_float() / 255.0
-				var green : float = color_data[1].to_float() / 255.0
-				var blue : float = color_data[2].to_float() / 255.0
-				var color = Color(red, green, blue)
-				result.add_color(color)
 			else:
-				push_error("Unable to parse line: %s" % line)
+				var matches = color_line_regex.search(line)
+				if matches:
+					var red: float = matches.get_string("red").to_float() / 255.0
+					var green: float = matches.get_string("green").to_float() / 255.0
+					var blue: float = matches.get_string("blue").to_float() / 255.0
+					var color = Color(red, green, blue)
+					result.add_color(color)
+				else:
+					push_error("Unable to parse line: %s" % line)
+
 			line_number += 1
 
 		if result:
@@ -47,14 +51,14 @@ static func import_gpl(path : String) -> Palette:
 		file.close()
 	else:
 		push_error("File \"%s\" does not exist." % path)
-		
+
 	return result
-	
-	
+
+
 # Get all gpl files in a path
 static func get_gpl_files(path) -> Array:
 	var files = []
-	
+
 	var dir = Directory.new()
 	if dir.open(path) == OK:
 		dir.list_dir_begin()
@@ -65,5 +69,5 @@ static func get_gpl_files(path) -> Array:
 			file_name = dir.get_next()
 	else:
 		print("An error occurred when trying to access the color palette path")
-		
+
 	return files
