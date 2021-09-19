@@ -33,7 +33,7 @@ static func import_gpl(path : String) -> Palette:
 			# Comments
 			elif line.begins_with('#'):
 				comments += line.trim_prefix('#') + '\n'
-			else:
+			elif not line.empty():
 				var matches = color_line_regex.search(line)
 				if matches:
 					var red: float = matches.get_string("red").to_float() / 255.0
@@ -42,7 +42,7 @@ static func import_gpl(path : String) -> Palette:
 					var color = Color(red, green, blue)
 					result.add_color(color)
 				else:
-					push_error("Unable to parse line: %s" % line)
+					push_error("Unable to parse line %s with content: %s" % [line_number + 1, line])
 
 			line_number += 1
 
