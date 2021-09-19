@@ -5,7 +5,7 @@ extends Reference
 # Adapted from Github -> Orama-Interactive/Pixelorama/src/Autoload/Import.gd
 static func import_gpl(path : String) -> Palette:
 	var color_line_regex = RegEx.new()
-	color_line_regex.compile("(?<red>[0-9]{1,3})[ \t]+(?<green>[0-9]{1,3})[ \t]+(?<blue>[0-9]{1,3})[ \t]+(?<hex>[0-9a-fA-F]{6})")
+	color_line_regex.compile("(?<red>[0-9]{1,3})[ \t]+(?<green>[0-9]{1,3})[ \t]+(?<blue>[0-9]{1,3})")
 
 	var result : Palette = null
 
