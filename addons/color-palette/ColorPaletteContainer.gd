@@ -22,14 +22,12 @@ func _ready():
 	grid.connect("grid_item_reordered", self, "_grid_item_reordered")
 	
 #	Base settings for all color rects are set in the color tile class
-	var cr = ColorTile.new()
-	
 	if palette:
 		name_label.text = palette.name
 		name_label.hint_tooltip = palette.comments
 		for c in palette.colors:
 #			Color rect instance properties
-			var cri = cr.duplicate()
+			var cri = ColorTile.new()
 			cri.color = c
 			cri.connect("tile_selected", self, "_on_tile_selected")
 			cri.connect("tile_deleted", self, "_on_tile_deleted")
