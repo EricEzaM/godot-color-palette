@@ -1,4 +1,4 @@
-tool
+@tool
 extends FlexGridContainer
 
 signal grid_item_reordered(index_from, index_to)
@@ -14,15 +14,15 @@ func _gui_input(event):
 			c = c as ColorRect
 			if c.get_rect().has_point(mp):
 				move_child(dragging, c.get_index())
-		
-	
+
+
 #	When dragging finished
-	if (event is InputEventMouseButton and 
+	if (event is InputEventMouseButton and
 			dragging != null and
 			event.get_button_index() == 1 and
 			event.is_pressed() == false):
-				emit_signal("grid_item_reordered", 
-						drag_start_index, 
+				emit_signal("grid_item_reordered",
+						drag_start_index,
 						dragging.get_index())
-								
+
 				dragging = null

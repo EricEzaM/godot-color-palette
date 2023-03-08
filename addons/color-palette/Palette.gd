@@ -1,6 +1,6 @@
-tool
+@tool
 class_name Palette
-extends Reference
+extends RefCounted
 
 var name: String = "Palette"
 var colors: Array = [] # of Color
@@ -21,19 +21,19 @@ func change_color(p_index: int, p_color: Color) -> void:
 func reorder_color(p_index_from: int, p_index_to: int):
 	if p_index_from == p_index_to:
 		return
-	
+
 	var moving_color = colors[p_index_from]
 	if p_index_from < p_index_to:
-		colors.remove(p_index_from)
+		colors.remove_at(p_index_from)
 		colors.insert(p_index_to, moving_color)
-	
+
 	if p_index_from > p_index_to:
-		colors.remove(p_index_from)
+		colors.remove_at(p_index_from)
 		colors.insert(p_index_to, moving_color)
 
 
 func remove_color(p_index: int):
-	colors.remove(p_index)
+	colors.remove_at(p_index)
 
 
 func save():
@@ -41,23 +41,22 @@ func save():
 		push_error("To export gpl, file name must end in .gpl")
 		return
 
-	var file = File.new()
-	file.open(path, file.WRITE)
+	var file = FileAccess.open(path, FileAccess.WRITE)
 	file.store_line("GIMP Palette")
 
 	var comment_lines = comments.split("\n")
 	for cl in comment_lines:
 		file.store_line("# " + cl)
-	
+
 	for c in colors:
 		var color_data = [
-			str(c.r8), 
-			str(c.g8), 
-			str(c.b8), 
+			str(c.r8),
+			str(c.g8),
+			str(c.b8),
 			"Untitled"
 		]
 
-		var line = PoolStringArray(color_data).join(" ")
+		var line:String = (" ").join(color_data)
 		file.store_line(line)
 
 	file.close()

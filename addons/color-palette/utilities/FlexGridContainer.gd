@@ -1,29 +1,32 @@
-tool
-class_name FlexGridContainer, "res://addons/color-palette/utilities/FlexGridContainerIcon.png"
+@tool
+@icon("res://addons/color-palette/utilities/FlexGridContainerIcon.png")
+class_name FlexGridContainer
 extends Container
 
 
-var columns: int = 1 setget set_columns
-
+var columns: int = 1:
+	set(p_columns):
+		columns = p_columns
+#		minimum_size_changed()
 
 func _notification(p_what):
 	match p_what:
-		NOTIFICATION_SORT_CHILDREN:		
+		NOTIFICATION_SORT_CHILDREN:
 			var col_minw: Dictionary # Max of min_width  of all controls in each col (indexed by col).
 			var row_minh: Dictionary # Max of min_height of all controls in each row (indexed by row).
 			var col_expanded: Array # Columns which have the SIZE_EXPAND flag set.
 			var row_expanded: Array # Rows which have the SIZE_EXPAND flag set.
 
-			var hsep = get_constant("hseparation", "GridContainer")
-			var vsep = get_constant("vseparation", "GridContainer")
-			
+			var hsep = get_theme_constant("hseparation", "GridContainer")
+			var vsep = get_theme_constant("vseparation", "GridContainer")
+
 			var min_columns = 1
-			
+
 			if get_child_count() > 0:
-				min_columns = int(floor(rect_size.x / (get_child(0).get_combined_minimum_size().x + hsep)))
-			
+				min_columns = int(floor(size.x / (get_child(0).get_combined_minimum_size().x + hsep)))
+
 			self.columns = min_columns
-			
+
 			var max_col = min(get_child_count(), columns)
 			var max_row = ceil(float(get_child_count()) / float(columns))
 
@@ -50,7 +53,7 @@ func _notification(p_what):
 
 				if c.get_h_size_flags() & SIZE_EXPAND:
 					col_expanded.push_front(col)
-					
+
 				if c.get_v_size_flags() & SIZE_EXPAND:
 					row_expanded.push_front(row)
 
@@ -60,7 +63,7 @@ func _notification(p_what):
 
 #			Evaluate the remaining space for expanded columns/rows.
 			var remaining_space: Vector2 = get_size()
-			
+
 			for e in col_minw.keys():
 				if !col_expanded.has(e):
 					remaining_space.x -= col_minw.get(e)
@@ -77,7 +80,7 @@ func _notification(p_what):
 #				Check if all minwidth constraints are OK if we use the remaining space.
 				can_fit = true
 				var max_index = col_expanded.front()
-				
+
 				for e in col_expanded:
 					if col_minw.has(e):
 						if col_minw[e] > col_minw[max_index]:
@@ -95,7 +98,7 @@ func _notification(p_what):
 #				Check if all minheight constraints are OK if we use the remaining space.
 				can_fit = true
 				var max_index = row_expanded.front()
-				
+
 				for e in row_expanded:
 					if row_minh[e] > row_minh[max_index]:
 						max_index = e
@@ -134,15 +137,16 @@ func _notification(p_what):
 				fit_child_in_rect(c, Rect2(p, s))
 
 				col_ofs += s.x + hsep
-				
+
 		NOTIFICATION_THEME_CHANGED:
-			minimum_size_changed()
+			pass
+#			minimum_size_changed()
 
 func _get_minimum_size():
 #	Only worry about max height, not width (since it does width automatically)
 	var row_minh: Dictionary
 
-	var vsep = get_constant("vseparation", "GridContainer")
+	var vsep = get_theme_constant("vseparation", "GridContainer")
 
 	var max_row = 0
 
@@ -152,7 +156,9 @@ func _get_minimum_size():
 		var c: Control = get_child(i)
 		if !c or !c.is_visible():
 			continue
-		var row = valid_controls_index / columns
+		var row := 0
+		if columns > 0:
+			row = valid_controls_index / columns
 		valid_controls_index += 1
 
 		var ms = c.get_combined_minimum_size()
@@ -172,7 +178,3 @@ func _get_minimum_size():
 
 	return ms
 
-
-func set_columns(p_columns: int):
-	columns = p_columns
-	minimum_size_changed()
