@@ -6,44 +6,17 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "ColorRect",
-"class": "ColorTile",
-"language": "GDScript",
-"path": "res://addons/color-palette/ColorTile.gd"
-}, {
-"base": "Container",
-"class": "FlexGridContainer",
-"language": "GDScript",
-"path": "res://addons/color-palette/utilities/FlexGridContainer.gd"
-}, {
-"base": "Reference",
-"class": "Palette",
-"language": "GDScript",
-"path": "res://addons/color-palette/Palette.gd"
-}, {
-"base": "Reference",
-"class": "PaletteImporter",
-"language": "GDScript",
-"path": "res://addons/color-palette/PaletteImporter.gd"
-} ]
-_global_script_class_icons={
-"ColorTile": "",
-"FlexGridContainer": "res://addons/color-palette/utilities/FlexGridContainerIcon.png",
-"Palette": "",
-"PaletteImporter": ""
-}
+config_version=5
 
 [application]
 
 config/name="Godot-color-palette"
+config/features=PackedStringArray("4.1")
 config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "color-palette" )
+enabled=PackedStringArray("res://addons/color-palette/plugin.cfg")
 
 [rendering]
 
