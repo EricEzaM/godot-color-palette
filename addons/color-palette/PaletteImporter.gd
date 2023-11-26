@@ -19,7 +19,7 @@ static func import_gpl(path : String) -> Palette:
 			line = line.lstrip(" ")
 			# Check if valid Gimp Palette Library file
 			if line_number == 0:
-				if line != "GIMP Palette":
+				if "GIMP Palette" not in line:
 					push_error("File \"%s\" is not a valid GIMP Palette." % path)
 					break
 				else:
